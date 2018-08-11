@@ -14,6 +14,7 @@
     "@types/node": "^10.5.8",
     "app-root-path": "^2.1.0",
     "archiver": "^2.1.1",
+    "chalk": "^2.4.1",
     "chokidar-cli": "^1.2.0",
     "html-webpack-plugin": "^3.2.0",
     "terser-webpack-plugin": "^1.0.0",

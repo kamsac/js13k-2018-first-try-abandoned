@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const archiver = require('archiver');
 const rootPath = require('app-root-path') + '';
+const chalk = require('chalk');
 
 const MAX_PACKAGE_SIZE = 13312;
 
@@ -25,5 +26,11 @@ archive.finalize();
 
 function printAvailableSizeLimit(packageSize) {
   const freeSpacePercentage = Math.round(packageSize / MAX_PACKAGE_SIZE * 100 * 100) / 100;
-  console.log(`Final zip file: ${packageSize}B out of ${MAX_PACKAGE_SIZE}B (${freeSpacePercentage}%)`);
+  const chalkColor = freeSpacePercentage <= 80 ? 'green' : (freeSpacePercentage <= 100) ? 'yellow' : 'red';
+  console.log(
+    `Final zip file: ` +
+    `${chalk.bold[chalkColor](`${packageSize} bytes`)} ` +
+    `out of ${chalk.bold(`${MAX_PACKAGE_SIZE} bytes`)} ` +
+    `(${chalk.bold[chalkColor](`${freeSpacePercentage}%`)})`
+  );
 }
