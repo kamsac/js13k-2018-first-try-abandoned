@@ -1,6 +1,7 @@
 const path = require('path');
-const HtmlWebPackPlugin = require('html-webpack-plugin');
 const rootPath = require('app-root-path') + '';
+
+const outputFilename = 'main.js';
 
 module.exports = {
   target: 'web',
@@ -8,7 +9,7 @@ module.exports = {
     main: path.resolve(rootPath, './src/main.ts'),
   },
   output: {
-    filename: '[name].js',
+    filename: outputFilename,
     path: path.resolve(rootPath, 'dist'),
   },
   resolve: {
@@ -27,23 +28,4 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new HtmlWebPackPlugin({
-      title: 'js13k-2018',
-      template: path.resolve(rootPath, 'src/index.html'),
-      minify: {
-        collapseBooleanAttributes: true,
-        collapseInlineTagWhitespace: true,
-        collapseWhitespace: true,
-        removeAttributeQuotes: true,
-        removeEmptyAttributes: true,
-        removeOptionalTags: true,
-        removeRedundantAttributes: true,
-        sortAttributes: true,
-        sortClassName: true,
-        useShortDoctype: true
-      },
-      showErrors: false
-    }),
-  ]
 };
