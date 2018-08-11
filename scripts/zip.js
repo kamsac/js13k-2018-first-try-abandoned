@@ -6,16 +6,22 @@ const chalk = require('chalk');
 
 const MAX_PACKAGE_SIZE = 13312;
 
-const distPath = path.join(rootPath, '/dist');
+const distDir = path.join(rootPath, '/dist');
 const packageName = 'game.zip';
-const zipPath = path.join(rootPath, packageName);
+const zipDir = path.join(rootPath, 'dist-zip');
+const zipPath = path.join(zipDir, packageName);
+
+if (!fs.existsSync(zipDir)) {
+  fs.mkdirSync(zipDir);
+}
+
 const output = fs.createWriteStream(zipPath);
 const archive = archiver('zip', {
   zlib: { level: 9 },
 });
 
 archive.pipe(output);
-archive.directory(distPath, false);
+archive.directory(distDir, false);
 
 output.on('close', () => {
   const packageSize = archive.pointer();
