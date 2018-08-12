@@ -10,7 +10,7 @@
     "noImplicitReturns": true,
     "allowSyntheticDefaultImports": true,
     "allowUnreachableCode": false,
-    "lib": ["es2017"]
+    "lib": ["es6", "es2017", "dom"]
   },
   "exclude": [
     "node_modules"

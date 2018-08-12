@@ -1,2 +1,3 @@
-const text: string = 'It works.';
-console.log(text);
+import Game from './Game';
+
+new Game();
