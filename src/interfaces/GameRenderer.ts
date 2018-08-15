@@ -1,5 +1,5 @@
-import World from './World';
+import World from '../World';
 
-export default interface WorldRenderer {
+export default interface GameRenderer {
     render: (world: World) => void;
 }

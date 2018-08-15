@@ -1,4 +1,4 @@
-export default interface Size2D {
+export default interface Size {
     width: number;
     height: number;
 }

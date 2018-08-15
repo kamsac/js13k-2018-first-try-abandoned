@@ -1,8 +1,9 @@
-import Size2D from './interfaces/Size2D';
-import World from './interfaces/World';
-import GameRenderer from './interfaces/WorldRenderer';
+import Size from './interfaces/Size';
+import World from './World';
+import Renderer from './interfaces/GameRenderer';
+import WorldEntity from './WorldEntity';
 
-export default class CanvasGameRenderer implements GameRenderer {
+export default class CanvasRenderer implements Renderer {
     private canvas!: HTMLCanvasElement;
     private context!: CanvasRenderingContext2D;
 
@@ -17,19 +18,21 @@ export default class CanvasGameRenderer implements GameRenderer {
 
     public render(world: World): void {
         this.clearCanvas();
+        this.renderPlayer(world.entities.player);
+    }
 
-        world.entities.forEach((entity) => {
-            //
-        });
-
-
+    private renderPlayer(player: WorldEntity): void {
+        this.context.beginPath();
+        this.context.arc(player.position.x, player.position.y, 10, 0, Math.PI*2);
+        this.context.fillStyle = '#4c4';
+        this.context.fill();
     }
 
     private clearCanvas(): void {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    private setResolution(dimensions: Size2D) {
+    private setResolution(dimensions: Size) {
         this.canvas.width = dimensions.width;
         this.canvas.height = dimensions.height;
     }

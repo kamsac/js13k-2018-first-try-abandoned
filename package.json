@@ -30,6 +30,7 @@
     "webpack-serve": "^2.0.2"
   },
   "dependencies": {
+    "jamid": "^1.0.0",
     "stats.js": "^0.17.0"
   }
 }

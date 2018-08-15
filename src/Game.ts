@@ -1,8 +1,8 @@
 import Stats from 'stats.js';
-import CanvasGameRenderer from './CanvasGameRenderer';
-import World from './interfaces/World';
+import CanvasRenderer from './CanvasRenderer';
+import World from './World';
 import GameRenderer from './interfaces/GameRenderer';
-import GameWorld from './GameWorld';
+import KeyboardAndMouseGameInput from './KeyboardAndMouseGameInput';
 
 export default class Game {
     private readonly ticksPerSecond: number;
@@ -15,15 +15,15 @@ export default class Game {
     private readonly world: World;
 
     public constructor() {
-        this.ticksPerSecond = 144;
+        this.ticksPerSecond = 30;
         this.tickTime = 1000 / this.ticksPerSecond;
         this.lastTickTime = 0;
         this.currentUpdateLag = 0;
         this.maxUpdateLag = 500;
-        this.gameRenderer = new CanvasGameRenderer();
-        this.world = new GameWorld();
+        this.gameRenderer = new CanvasRenderer();
+        this.world = new World();
         this.initFpsStats();
-
+        this.initInput();
         this.requestNextFrame();
     }
 
@@ -38,7 +38,7 @@ export default class Game {
 
         while (this.currentUpdateLag > this.tickTime) {
             this.currentUpdateLag -= this.tickTime;
-            this.update();
+            this.update(this.tickTime / 1000);
         }
         this.render();
         this.lastTickTime = time;
@@ -46,22 +46,21 @@ export default class Game {
         this.requestNextFrame();
     }
 
-    private update(): void {
-
+    private update(deltaTimeInSeconds: number): void {
+        this.world.update(deltaTimeInSeconds);
     }
 
     private render(): void {
         this.gameRenderer.render(this.world);
     }
 
+    private initInput(): void {
+        new KeyboardAndMouseGameInput();
+    }
+
     private initFpsStats(): void {
         this.fpsStats = new Stats();
         this.fpsStats.showPanel(0);
         document.body.appendChild(this.fpsStats.dom);
-    }
-
-    private initInput(): void {
-        // const gameInput: GameInput = new GameInput();
-        // Locator.provideGameInput(gameInput);
     }
 }
