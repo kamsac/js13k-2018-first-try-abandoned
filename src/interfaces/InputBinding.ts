@@ -1,6 +1,6 @@
 export default interface InputBinding {
     assignedKeys: string[];
-    isPressed: boolean;
+    pressed: boolean | number;
     lastChange: number;
     actionName: string;
 }
