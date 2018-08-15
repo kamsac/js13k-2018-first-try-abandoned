@@ -9,20 +9,34 @@ function getInitialInputBindingValue(actionName: string, assignedKeys: string[])
         lastChange: 0,
         actionName,
     };
+
 }
 
 function getKeyFromKeyboardEvent(event: KeyboardEvent): string {
     return event.key;
 }
 
+function getFriendlyMouseButtonKeyName(event: MouseEvent): string {
+    switch(event.button) {
+        case 0: return 'LMB';
+        case 2: return 'RMB';
+        default: return 'MB';
+    }
+}
+
 export default class KeyboardAndMouseGameInput implements GameInput {
     public bindings: AllInputBindings = {
         moveForward: getInitialInputBindingValue('moveForward', ['w', 'W']),
         moveBackward: getInitialInputBindingValue('moveBackward', ['s', 'S']),
+        shoot: getInitialInputBindingValue('shoot', ['LMB']),
     };
 
-    constructor() {
+    private canvas: HTMLCanvasElement;
+
+    constructor(canvas: HTMLCanvasElement) {
+        this.canvas = canvas;
         this.initKeyboard();
+        this.initMouse();
     }
 
     private updateInput(pressedKey: string, isPressed: boolean) {
@@ -36,27 +50,35 @@ export default class KeyboardAndMouseGameInput implements GameInput {
         }
     }
 
-    private onKeydown(event: KeyboardEvent): void {
-        const key: string = getKeyFromKeyboardEvent(event);
-
-        if (!event.repeat) {
-            this.updateInput(key, true);
-        }
-    }
-
-    private onKeyup(event: KeyboardEvent): void {
-        const key: string = getKeyFromKeyboardEvent(event);
-
-        this.updateInput(key, false);
-    }
-
     private initKeyboard(): void {
         window.addEventListener('keydown', (event: KeyboardEvent) => {
-            this.onKeydown(event);
+            const buttonName: string = getKeyFromKeyboardEvent(event);
+            if (!event.repeat) {
+                this.updateInput(buttonName, true);
+            }
         });
 
         window.addEventListener('keyup', (event: KeyboardEvent) => {
-            this.onKeyup(event);
+            const buttonName: string = getKeyFromKeyboardEvent(event);
+            this.updateInput(buttonName, false);
+        });
+    }
+
+    private initMouse(): void {
+        this.canvas.oncontextmenu = () => false;
+
+        this.canvas.addEventListener('mousemove', (event: MouseEvent) => {
+            // console.log('move');
+        });
+
+        this.canvas.addEventListener('mousedown', (event: MouseEvent) => {
+            const buttonName: string = getFriendlyMouseButtonKeyName(event);
+            this.updateInput(buttonName, true);
+        });
+
+        this.canvas.addEventListener('mouseup', (event: MouseEvent) => {
+            const buttonName: string = getFriendlyMouseButtonKeyName(event);
+            this.updateInput(buttonName, false);
         });
     }
 }

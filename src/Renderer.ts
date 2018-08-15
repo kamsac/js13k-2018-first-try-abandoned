@@ -1,10 +1,9 @@
 import Size from './interfaces/Size';
 import World from './World';
-import Renderer from './interfaces/GameRenderer';
 import WorldEntity from './WorldEntity';
 
-export default class CanvasRenderer implements Renderer {
-    private canvas!: HTMLCanvasElement;
+export default class Renderer {
+    public canvas!: HTMLCanvasElement;
     private context!: CanvasRenderingContext2D;
 
     public constructor() {

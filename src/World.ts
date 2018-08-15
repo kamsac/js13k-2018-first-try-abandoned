@@ -1,6 +1,5 @@
 import Size from './interfaces/Size';
 import MainCharacter from './MainCharacter';
-import KeyboardAndMouseGameInput from './KeyboardAndMouseGameInput';
 import PlayerCharacterInputManager from './PlayerCharacterInputManager';
 import WorldEntitiesStructure from './interfaces/WorldEntitiesStructure';
 import Point from './helpers/Point';
@@ -31,7 +30,7 @@ export default class World {
                 position: new Point(this.size.width / 2, this.size.height / 2),
             },
             {
-                inputManager: new PlayerCharacterInputManager(new KeyboardAndMouseGameInput()),
+                inputManager: new PlayerCharacterInputManager(),
             },
         );
     }

@@ -4,8 +4,8 @@ import WorldEntityOptions from './interfaces/WorldEntityOptions';
 import PlayerCharacterInputManager from './PlayerCharacterInputManager';
 import Vector from './helpers/Vector';
 
-const MOVEMENT_ACCELERATION: number = 2;
-const MOVEMENT_DUMP: number = 0.8;
+const MOVEMENT_ACCELERATION: number = 0.6;
+const MOVEMENT_DUMP: number = 0.85;
 
 export default class MainCharacter extends WorldEntity {
     private inputManager: PlayerCharacterInputManager;
@@ -22,13 +22,17 @@ export default class MainCharacter extends WorldEntity {
         this.position = this.position.addVector(this.velocity);
     }
 
-    public moveForward() {
+    public moveForward(): void {
         const playerInputVelocity: Vector = new Vector(0, -MOVEMENT_ACCELERATION);
         this.velocity = this.velocity.add(playerInputVelocity);
     }
 
-    public moveBackward() {
+    public moveBackward(): void {
         const playerInputVelocity: Vector = new Vector(0, MOVEMENT_ACCELERATION);
         this.velocity = this.velocity.add(playerInputVelocity);
+    }
+
+    public shoot(): void {
+        console.log('shoot');
     }
 }
