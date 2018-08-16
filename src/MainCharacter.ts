@@ -10,11 +10,13 @@ const MOVEMENT_DUMP: number = 0.85;
 
 export default class MainCharacter extends WorldEntity {
     private inputManager: PlayerCharacterInputManager;
+    private forwardDirection: Vector;
 
     constructor(entityOptions: WorldEntityOptions, mainCharacterOptions: MainCharacterOptions) {
         super(entityOptions);
-        this.inputManager = mainCharacterOptions.inputManager;
         this.type = 'player';
+        this.inputManager = mainCharacterOptions.inputManager;
+        this.forwardDirection = new Vector(0, -1).normalized();
     }
 
     public update(deltaTimeInSeconds: number): void {
@@ -24,31 +26,31 @@ export default class MainCharacter extends WorldEntity {
     }
 
     public moveForward(): void {
-        const playerInputVelocity: Vector = new Vector(0, -MOVEMENT_ACCELERATION);
+        const playerInputVelocity: Vector = this.forwardDirection.multiply(MOVEMENT_ACCELERATION);
         this.velocity = this.velocity.add(playerInputVelocity);
     }
 
     public moveBackward(): void {
-        const playerInputVelocity: Vector = new Vector(0, MOVEMENT_STRAFE_ACCELERATION);
+        const playerInputVelocity: Vector = this.forwardDirection.rotate(Math.PI).multiply(MOVEMENT_STRAFE_ACCELERATION);
         this.velocity = this.velocity.add(playerInputVelocity);
     }
 
     public strafeLeft(): void {
-        const playerInputVelocity: Vector = new Vector(-MOVEMENT_STRAFE_ACCELERATION, 0);
+        const playerInputVelocity: Vector = this.forwardDirection.rotate(-Math.PI/2).multiply(MOVEMENT_STRAFE_ACCELERATION);
         this.velocity = this.velocity.add(playerInputVelocity);
     }
 
     public strafeRight(): void {
-        const playerInputVelocity: Vector = new Vector(MOVEMENT_STRAFE_ACCELERATION, 0);
+        const playerInputVelocity: Vector = this.forwardDirection.rotate(Math.PI/2).multiply(MOVEMENT_STRAFE_ACCELERATION);
         this.velocity = this.velocity.add(playerInputVelocity);
     }
 
     public rotateLeft(speed: number): void {
-        console.log('look left', speed);
+        this.forwardDirection = this.forwardDirection.rotate(speed / 100);
     }
 
     public rotateRight(speed: number): void {
-        console.log('look right', speed);
+        this.forwardDirection = this.forwardDirection.rotate(speed / 100);
     }
 
     public shoot(): void {

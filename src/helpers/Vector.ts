@@ -60,6 +60,16 @@ export default class Vector {
         );
     }
 
+    public rotate(radians: number): Vector {
+        const cos = Math.cos(radians);
+        const sin = Math.sin(radians);
+
+        return new Vector(
+            this.x * cos - this.y * sin,
+            this.x * sin + this.y * cos
+        );
+    }
+
     public toString(): string {
         return `(${this.x}, ${this.y})`;
     }
