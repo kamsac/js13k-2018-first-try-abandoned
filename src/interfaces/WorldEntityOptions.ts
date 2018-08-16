@@ -6,4 +6,5 @@ export default interface WorldEntityOptions {
     world: World;
     position?: Point;
     velocity?: Vector;
+    rotation?: Vector;
 }

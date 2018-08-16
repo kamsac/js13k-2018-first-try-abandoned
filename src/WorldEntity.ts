@@ -10,6 +10,7 @@ export default class WorldEntity {
     public world: World;
     public position: Point;
     public velocity: Vector;
+    public rotation: Vector;
     public type: WorldEntityType;
 
     constructor(entityOptions: WorldEntityOptions) {
@@ -17,6 +18,7 @@ export default class WorldEntity {
         this.world = entityOptions.world;
         this.position = entityOptions.position ? entityOptions.position : new Point(0,0);
         this.velocity = entityOptions.velocity ? entityOptions.velocity : new Vector(0,0);
+        this.rotation = entityOptions.rotation ? entityOptions.rotation : new Vector(0, -1);
         this.type = 'undefined';
     }
 

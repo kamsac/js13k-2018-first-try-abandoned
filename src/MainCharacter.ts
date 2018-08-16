@@ -47,10 +47,12 @@ export default class MainCharacter extends WorldEntity {
 
     public rotateLeft(speed: number): void {
         this.forwardDirection = this.forwardDirection.rotate(speed / 100);
+        this.rotation = this.forwardDirection;
     }
 
     public rotateRight(speed: number): void {
         this.forwardDirection = this.forwardDirection.rotate(speed / 100);
+        this.rotation = this.forwardDirection;
     }
 
     public shoot(): void {
