@@ -21,11 +21,15 @@ export default class KeyboardAndMouseGameInput implements GameInput {
         this.initMouse();
     }
 
-    private updateInput(pressedKey: string, isPressed: boolean | number) {
+    public update(): void {
+        this.resetMouseMovement();
+    }
+
+    private updateInput(pressedKey: string, pressed: boolean | number): void {
         for (const actionName in this.bindings) {
             if (this.bindings.hasOwnProperty(actionName)) {
                 if (this.bindings[actionName].assignedKeys.includes(pressedKey)) {
-                    this.bindings[actionName].pressed = isPressed;
+                    this.bindings[actionName].pressed = pressed;
                     this.bindings[actionName].lastChange = Date.now();
                 }
             }
@@ -72,6 +76,11 @@ export default class KeyboardAndMouseGameInput implements GameInput {
             const buttonName: string = getFriendlyMouseButtonKeyName(event);
             this.updateInput(buttonName, false);
         });
+    }
+
+    private resetMouseMovement(): void {
+        this.updateInput('MML', 0);
+        this.updateInput('MMR', 0);
     }
 }
 

@@ -3,6 +3,7 @@ import Renderer from './Renderer';
 import World from './World';
 import KeyboardAndMouseGameInput from './KeyboardAndMouseGameInput';
 import Locator from './Locator';
+import GameInput from './interfaces/GameInput';
 
 export default class Game {
     private readonly ticksPerSecond: number;
@@ -11,8 +12,9 @@ export default class Game {
     private currentUpdateLag: number; // ms
     private readonly maxUpdateLag: number; // ms
     private fpsStats!: Stats;
-    private readonly gameRenderer: Renderer;
     private readonly world: World;
+    private readonly gameRenderer: Renderer;
+    private readonly gameInput: GameInput;
 
     public constructor() {
         this.ticksPerSecond = 60;
@@ -21,7 +23,8 @@ export default class Game {
         this.currentUpdateLag = 0;
         this.maxUpdateLag = 500;
         this.gameRenderer = new Renderer();
-        this.initInput();
+        this.gameInput = new KeyboardAndMouseGameInput(this.gameRenderer.canvas);
+        Locator.provideGameInput(this.gameInput);
         this.world = new World();
         this.initFpsStats();
         this.requestNextFrame();
@@ -48,14 +51,11 @@ export default class Game {
 
     private update(deltaTimeInSeconds: number): void {
         this.world.update(deltaTimeInSeconds);
+        this.gameInput.update();
     }
 
     private render(): void {
         this.gameRenderer.render(this.world);
-    }
-
-    private initInput(): void {
-        Locator.provideGameInput(new KeyboardAndMouseGameInput(this.gameRenderer.canvas));
     }
 
     private initFpsStats(): void {
