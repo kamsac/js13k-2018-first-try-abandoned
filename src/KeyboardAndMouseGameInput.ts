@@ -38,6 +38,7 @@ export default class KeyboardAndMouseGameInput implements GameInput {
 
     private initKeyboard(): void {
         window.addEventListener('keydown', (event: KeyboardEvent) => {
+            this.canvas.requestPointerLock();
             const buttonName: string = getKeyFromKeyboardEvent(event);
             if (!event.repeat) {
                 this.updateInput(buttonName, true);
@@ -68,6 +69,7 @@ export default class KeyboardAndMouseGameInput implements GameInput {
         });
 
         this.canvas.addEventListener('mousedown', (event: MouseEvent) => {
+            this.canvas.requestPointerLock();
             const buttonName: string = getFriendlyMouseButtonKeyName(event);
             this.updateInput(buttonName, true);
         });
