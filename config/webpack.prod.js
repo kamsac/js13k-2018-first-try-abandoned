@@ -45,7 +45,8 @@ module.exports = merge(common, {
         removeRedundantAttributes: true,
         sortAttributes: true,
         sortClassName: true,
-        useShortDoctype: true
+        useShortDoctype: true,
+        minifyCSS: true,
       },
       showErrors: false,
       inlineSource: '.(js|css)$',
