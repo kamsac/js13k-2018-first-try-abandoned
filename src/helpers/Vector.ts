@@ -1,4 +1,5 @@
 import Point from './Point';
+import LineSegment from "./LineSegment";
 
 export default class Vector {
     public x: number;
@@ -72,6 +73,14 @@ export default class Vector {
 
     public angle(): number {
         return Math.atan2(this.y, this.x);
+    }
+
+    public dot(vector: Vector): number {
+        return this.x * vector.x + this.y * vector.y;
+    }
+
+    public cross(vector: Vector): number {
+        return this.x * vector.y - this.y * vector.x;
     }
 
     public toString(): string {

@@ -3,11 +3,13 @@ import World from './World';
 import WorldEntity from './WorldEntity';
 import PlayerRenderer from './render/PlayerRenderer';
 import MainCharacter from './MainCharacter';
+import WallRenderer from './render/WallRenderer';
+import Room from './Room';
 
 export default class Renderer {
     public canvas!: HTMLCanvasElement;
     private context!: CanvasRenderingContext2D;
-    private playerRenderer = new PlayerRenderer();
+    private playerRenderer: PlayerRenderer = new PlayerRenderer();
 
     public constructor() {
         this.createCanvas();
@@ -23,10 +25,20 @@ export default class Renderer {
         this.clearCanvas();
 
         this.renderPlayer(world.entities.player);
+        this.renderWalls(world.rooms);
     }
 
     private resetTransform(): void {
         this.context.setTransform(1,0,0,1,0,0);
+    }
+
+    private renderWalls(rooms: Room[]): void {
+        this.resetTransform();
+        rooms.forEach((room) => {
+            room.walls.forEach((wall) => {
+                WallRenderer.render(this.context, wall);
+            });
+        });
     }
 
     private renderPlayer(player: MainCharacter): void {

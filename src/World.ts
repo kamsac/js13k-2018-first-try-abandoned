@@ -3,10 +3,12 @@ import MainCharacter from './MainCharacter';
 import PlayerCharacterInputManager from './PlayerCharacterInputManager';
 import WorldEntitiesStructure from './interfaces/WorldEntitiesStructure';
 import Point from './helpers/Point';
+import Room from './Room';
 
 export default class World {
     public size: Size;
     public entities: WorldEntitiesStructure;
+    public rooms: Room[];
 
     public constructor() {
         this.size = {
@@ -15,8 +17,10 @@ export default class World {
         };
         this.entities = {
             player: this.createPlayer(),
-            walls: [],
         };
+        this.rooms = [
+            new Room(this)
+        ]
     }
 
     public update(deltaTimeInSeconds: number): void {
