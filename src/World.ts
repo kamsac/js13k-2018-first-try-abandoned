@@ -5,11 +5,15 @@ import WorldEntitiesStructure from './interfaces/WorldEntitiesStructure';
 import Point from './helpers/Point';
 import Room from './Room';
 
+const lightTurnOffDelay = 2000;
+
 export default class World {
     public size: Size;
     public entities: WorldEntitiesStructure;
     public rooms: Room[];
     public static roomMaxIndexPosition: number = 5;
+    public isLightOn!: boolean;
+    public lastLightTurnOn!: number;
 
     public constructor() {
         this.size = {
@@ -18,16 +22,19 @@ export default class World {
         };
         this.rooms = [];
         this.applyRoom(new Room(this, new Point(2, 2)));
-        console.log(this.rooms[0].centerPosition);
 
         this.entities = {
             player: this.createPlayer(),
         };
+
+        this.turnTheLightOn();
     }
 
     public update(deltaTimeInSeconds: number): void {
+        console.log('is light on', this.isLightOn);
         this.entities.player.update(deltaTimeInSeconds);
         this.createAdjacentRooms();
+        this.updateLight();
     }
 
     public applyRoom(room: Room): void {
@@ -73,6 +80,11 @@ export default class World {
         );
     }
 
+    public turnTheLightOn(): void {
+        this.lastLightTurnOn = Date.now();
+        this.isLightOn = true;
+    }
+
     private createPlayer(): MainCharacter {
         const firstRoom: Room = this.rooms[0];
         return new MainCharacter(
@@ -84,6 +96,12 @@ export default class World {
                 inputManager: new PlayerCharacterInputManager(),
             },
         );
+    }
+
+    private updateLight(): void {
+        if (this.lastLightTurnOn + lightTurnOffDelay < Date.now()) {
+            this.isLightOn = false;
+        }
     }
 }
 

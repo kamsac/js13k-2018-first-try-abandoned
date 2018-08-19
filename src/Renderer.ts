@@ -5,19 +5,25 @@ import PlayerRenderer from './render/PlayerRenderer';
 import MainCharacter from './MainCharacter';
 import WallRenderer from './render/WallRenderer';
 import Room from './Room';
+import LightRenderer from './render/LightRenderer';
+
+const canvasSize: Size = {
+    width: 800,
+    height: 600,
+};
 
 export default class Renderer {
     public canvas!: HTMLCanvasElement;
     private context!: CanvasRenderingContext2D;
     private playerRenderer: PlayerRenderer = new PlayerRenderer();
+    private lightRenderer: LightRenderer;
 
     public constructor() {
         this.createCanvas();
-        this.setResolution({
-            width: 800,
-            height: 600,
-        });
+        this.setResolution(canvasSize);
         this.attachCanvas();
+
+        this.lightRenderer = new LightRenderer(canvasSize);
     }
 
     public render(world: World): void {
@@ -26,6 +32,7 @@ export default class Renderer {
 
         this.renderPlayer(world.entities.player);
         this.renderWalls(world.rooms);
+        this.renderLight(world.isLightOn);
     }
 
     private resetTransform(): void {
@@ -55,6 +62,13 @@ export default class Renderer {
         this.drawImage(sprite, worldEntity.position.x, worldEntity.position.y, 1, worldEntity.rotation.angle());
     }
 
+    private renderLight(isLightOn: boolean): void {
+        this.context.drawImage(
+            this.lightRenderer.getSprite(isLightOn),
+            0, 0,
+            this.canvas.width, this.canvas.height,
+        );
+    }
 
     private clearCanvas(): void {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
