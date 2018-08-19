@@ -47,7 +47,6 @@ export default class World {
                         new Room(
                             this,
                             newRoomIndexPosition,
-                            // forcedExitRooms
                         )
                     );
                 }
@@ -57,6 +56,12 @@ export default class World {
 
     public getRoomByIndexPosition(indexPosition: Point): Room | undefined {
         return this.rooms.find((room) => room.indexPosition.isEqual(indexPosition))
+    }
+
+    public purgeUnusedRooms(): void {
+        this.rooms = this.rooms
+            .sort((roomA, roomB) => roomB.lastTimeVisited - roomA.lastTimeVisited)
+            .slice(0, 8);
     }
 
     public static isRoomIndexPositionOutsideWorldBoundary(indexPosition: Point): boolean {

@@ -16,6 +16,7 @@ export default class MainCharacter extends WorldEntity {
     private inputManager: PlayerCharacterInputManager;
     private forwardDirection: Vector;
     private inputVelocity: Vector;
+    private currentRoomLastTick: Room;
     public currentRoom: Room;
     public static readonly sizeRadius: number = 15;
 
@@ -24,6 +25,7 @@ export default class MainCharacter extends WorldEntity {
         this.type = 'player';
         this.inputManager = mainCharacterOptions.inputManager;
         this.currentRoom = this.world.rooms[0];
+        this.currentRoomLastTick = this.currentRoom;
         this.forwardDirection = new Vector(0, -1).normalized();
         this.inputVelocity = new Vector(0, 0);
     }
@@ -50,6 +52,10 @@ export default class MainCharacter extends WorldEntity {
 
         this.position = this.position.addVector(this.velocity);
         this.updateRoomPosition();
+        if (this.hasCharacterTransitionedIntoOtherRoom()) {
+            this.world.purgeUnusedRooms();
+        }
+        this.currentRoomLastTick = this.currentRoom;
     }
 
     public moveForward(): void {
@@ -80,6 +86,10 @@ export default class MainCharacter extends WorldEntity {
 
     public shoot(): void {
         console.log('shoot');
+    }
+
+    private hasCharacterTransitionedIntoOtherRoom(): boolean {
+        return this.currentRoom !== this.currentRoomLastTick;
     }
 
     private updateRoomPosition(): void {
