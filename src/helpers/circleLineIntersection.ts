@@ -3,8 +3,12 @@ import Circle from './Circle';
 import Point from './Point';
 
 export default function circleLineIntersection(circle: Circle, line: Line): Point[] {
-    const a = line.a, b = line.b, c = line.c;
-    const x = circle.x, y = circle.y, r = circle.r;
+    const a = line.a;
+    const b = line.b;
+    const c = line.c;
+    const x = circle.x;
+    const y = circle.y;
+    const r = circle.r;
 
     // Solve for the variable x with the formulas: ax + by = c (equation of line)
     // and (x-X)^2 + (y-Y)^2 = r^2 (equation of circle where X,Y are known) and expand to obtain quadratic:
@@ -36,8 +40,8 @@ export default function circleLineIntersection(circle: Circle, line: Line): Poin
         if (Math.abs((x1-r)-x) < Number.EPSILON || Math.abs((x1+r)-x) < Number.EPSILON)
             return [new Point(x1, y)];
 
-        const dx = Math.abs(x1 - x);
-        const dy = Math.sqrt(r * r - dx * dx);
+        const dx: number = Math.abs(x1 - x);
+        const dy: number = Math.sqrt(r * r - dx * dx);
 
         // Vertical line cuts through circle
         return [

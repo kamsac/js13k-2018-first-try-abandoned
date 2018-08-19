@@ -30,6 +30,13 @@ export default class Point {
         );
     }
 
+    public subtractVector(vector: Vector): Point {
+        return new Point(
+            this.x - vector.x,
+            this.y - vector.y,
+        );
+    }
+
     public isEqual(point: Point): boolean {
         return this.x === point.x && this.y === point.y;
     }
