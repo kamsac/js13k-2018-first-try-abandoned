@@ -1,3 +1,5 @@
+import MainCharacter from '../MainCharacter';
+
 export default class PlayerRenderer {
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
@@ -5,8 +7,8 @@ export default class PlayerRenderer {
     constructor() {
         this.canvas = document.createElement('canvas');
         this.context = this.canvas.getContext('2d')!;
-        this.canvas.height = 50;
-        this.canvas.width = 50;
+        this.canvas.height = MainCharacter.sizeRadius * 2;
+        this.canvas.width = MainCharacter.sizeRadius * 2;
     }
 
     public getSprite(): HTMLCanvasElement {

@@ -6,8 +6,9 @@ import Vector from './helpers/Vector';
 import lineSegmentCircleIntersection from './helpers/lineSegmentCircleIntersection';
 import Circle from './helpers/Circle';
 import Point from './helpers/Point';
+import Room from './Room';
 
-const MOVEMENT_ACCELERATION: number = 0.6;
+const MOVEMENT_ACCELERATION: number = 0.4;
 const MOVEMENT_STRAFE_ACCELERATION = MOVEMENT_ACCELERATION * 0.67;
 const MOVEMENT_DUMP: number = 0.85;
 
@@ -15,11 +16,14 @@ export default class MainCharacter extends WorldEntity {
     private inputManager: PlayerCharacterInputManager;
     private forwardDirection: Vector;
     private inputVelocity: Vector;
+    public currentRoom: Room;
+    public static readonly sizeRadius: number = 15;
 
     constructor(entityOptions: WorldEntityOptions, mainCharacterOptions: MainCharacterOptions) {
         super(entityOptions);
         this.type = 'player';
         this.inputManager = mainCharacterOptions.inputManager;
+        this.currentRoom = this.world.rooms[0];
         this.forwardDirection = new Vector(0, -1).normalized();
         this.inputVelocity = new Vector(0, 0);
     }
@@ -31,7 +35,7 @@ export default class MainCharacter extends WorldEntity {
         this.velocity = this.velocity.multiply(MOVEMENT_DUMP);
 
         const targetPosition: Point = this.position.addVector(this.velocity);
-        const playerCircleMask: Circle = new Circle(targetPosition, 25);
+        const playerCircleMask: Circle = new Circle(targetPosition, MainCharacter.sizeRadius);
 
         this.world.rooms.forEach((room) => {
             room.walls.forEach((wall) => {
@@ -45,6 +49,7 @@ export default class MainCharacter extends WorldEntity {
         });
 
         this.position = this.position.addVector(this.velocity);
+        this.updateRoomPosition();
     }
 
     public moveForward(): void {
@@ -64,16 +69,26 @@ export default class MainCharacter extends WorldEntity {
     }
 
     public rotateLeft(speed: number): void {
-        this.forwardDirection = this.forwardDirection.rotate(speed / 100);
+        this.forwardDirection = this.forwardDirection.rotate(speed / 120);
         this.rotation = this.forwardDirection;
     }
 
     public rotateRight(speed: number): void {
-        this.forwardDirection = this.forwardDirection.rotate(speed / 100);
+        this.forwardDirection = this.forwardDirection.rotate(speed / 120);
         this.rotation = this.forwardDirection;
     }
 
     public shoot(): void {
         console.log('shoot');
+    }
+
+    private updateRoomPosition(): void {
+        this.currentRoom = this.world.rooms.reduce((prevRoom, currentRoom) => {
+            return (
+                this.position.distance(currentRoom.centerPosition) < this.position.distance(prevRoom.centerPosition)
+            ) ? currentRoom : prevRoom;
+        });
+
+        this.currentRoom.lastTimeVisited = Date.now();
     }
 }
