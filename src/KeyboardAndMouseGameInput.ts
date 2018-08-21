@@ -4,9 +4,9 @@ import InputBinding from './interfaces/InputBinding';
 
 export default class KeyboardAndMouseGameInput implements GameInput {
     public bindings: AllInputBindings = {
-        moveForward: getInitialInputBindingValue('moveForward', ['w', 'W']),
+        moveForward: getInitialInputBindingValue('moveForward', ['w', 'W', 'z', 'Z']),
         moveBackward: getInitialInputBindingValue('moveBackward', ['s', 'S']),
-        strafeLeft: getInitialInputBindingValue('strafeLeft', ['a', 'A']),
+        strafeLeft: getInitialInputBindingValue('strafeLeft', ['a', 'A', 'q', 'Q']),
         strafeRight: getInitialInputBindingValue('strafeRight', ['d', 'D']),
         rotateLeft: getInitialInputBindingValue('rotateLeft', ['MML']),
         rotateRight: getInitialInputBindingValue('rotateRight', ['MMR']),
