@@ -8,28 +8,28 @@ import shuffle from "./helpers/shuffle";
 
 const doorWidth: number = 50;
 const wallWidth: number = 5;
-const roomSize: Size = {
-    width: 150,
-    height: 100,
-};
 
 export default class Room {
     public readonly world: World;
+    public static size: Size = {
+        width: 200,
+        height: 150,
+    };
     public walls: Wall[];
     public readonly indexPosition: Point;
     public readonly exits: RoomExits;
-    public readonly topLeftOffetRoomPosition: Point;
+    public readonly topLeftOffsetRoomPosition: Point;
     public readonly centerPosition: Point;
     public lastTimeVisited: number;
 
     constructor(world: World, indexPosition: Point) {
         this.world = world;
         this.indexPosition = indexPosition;
-        this.topLeftOffetRoomPosition = new Point(
-            this.indexPosition.x * roomSize.width,
-            this.indexPosition.y * roomSize.height,
+        this.topLeftOffsetRoomPosition = new Point(
+            this.indexPosition.x * Room.size.width,
+            this.indexPosition.y * Room.size.height,
         );
-        this.centerPosition = this.topLeftOffetRoomPosition.add(new Point(roomSize.width / 2, roomSize.height / 2));
+        this.centerPosition = this.topLeftOffsetRoomPosition.add(new Point(Room.size.width / 2, Room.size.height / 2));
         this.lastTimeVisited = 0;
         this.exits = this.randomizeRoomExits();
         this.walls = this.getEdgeWalls();
@@ -82,10 +82,10 @@ export default class Room {
     }
 
     private getEdgeWalls(): Wall[] {
-        const topLeft: Point = new Point(0+this.topLeftOffetRoomPosition.x, 0+this.topLeftOffetRoomPosition.y);
-        const topRight: Point = new Point(roomSize.width+this.topLeftOffetRoomPosition.x, 0+this.topLeftOffetRoomPosition.y);
-        const bottomRight: Point = new Point(roomSize.width+this.topLeftOffetRoomPosition.x, roomSize.height+this.topLeftOffetRoomPosition.y);
-        const bottomLeft: Point = new Point(0+this.topLeftOffetRoomPosition.x, roomSize.height+this.topLeftOffetRoomPosition.y);
+        const topLeft: Point = new Point(0+this.topLeftOffsetRoomPosition.x, 0+this.topLeftOffsetRoomPosition.y);
+        const topRight: Point = new Point(Room.size.width+this.topLeftOffsetRoomPosition.x, 0+this.topLeftOffsetRoomPosition.y);
+        const bottomRight: Point = new Point(Room.size.width+this.topLeftOffsetRoomPosition.x, Room.size.height+this.topLeftOffsetRoomPosition.y);
+        const bottomLeft: Point = new Point(0+this.topLeftOffsetRoomPosition.x, Room.size.height+this.topLeftOffsetRoomPosition.y);
 
         return [
             ...this.getOneEdgeWalls(new LineSegment(topLeft, topRight), wallWidth, this.exits.top),

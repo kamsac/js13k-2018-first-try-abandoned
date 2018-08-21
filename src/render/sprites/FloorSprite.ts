@@ -4,8 +4,8 @@ import SpriteBase from './SpriteBase';
 import drawImage from '../../helpers/drawImage';
 
 const floorSize: Size = {
-    width: 33 + 1/3,
-    height: 33 + 1/3,
+    width: 25,
+    height: 25,
 };
 
 export default class FloorSprite extends SpriteBase {
@@ -24,6 +24,8 @@ export default class FloorSprite extends SpriteBase {
     }
 
     public createSprite(): void {
+        this.context.fillStyle = '#0c0800';
+        this.context.fillRect(0,0, this.canvas.width, this.canvas.height);
         let tileRotation = 0;
         let tileRotationRandomVariant = 0.02;
         for (let y = 0; y < this.canvas.height; y += floorSize.height) {

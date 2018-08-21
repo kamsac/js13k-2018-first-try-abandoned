@@ -4,27 +4,37 @@ import PlayerCharacterInputManager from './PlayerCharacterInputManager';
 import WorldEntitiesStructure from './interfaces/WorldEntitiesStructure';
 import Point from './helpers/Point';
 import Room from './Room';
+import Camera from './Camera';
 
 const lightTurnOffDelay = 999999; // temporary 99999
 
 export default class World {
-    public size: Size;
+    public static size: Size = {
+        width: 1600,
+        height: 1200,
+    };
     public entities: WorldEntitiesStructure;
     public rooms: Room[];
-    public static roomMaxIndexPosition: number = 5;
+    public static roomMaxIndexPosition: Point = new Point(
+        World.size.width / Room.size.width,
+        World.size.height / Room.size.height,
+    );
     public isLightOn!: boolean;
     public lastLightTurnOn!: number;
 
     public constructor() {
-        this.size = {
-            width: 800,
-            height: 600,
-        };
         this.rooms = [];
-        this.applyRoom(new Room(this, new Point(2, 2)));
+        this.applyRoom(new Room(this, new Point(
+            Math.ceil(World.roomMaxIndexPosition.x / 2),
+            Math.ceil(World.roomMaxIndexPosition.y / 2),
+        )));
+
+        const player: MainCharacter = this.createPlayer();
+        const camera: Camera = this.createCamera(player);
 
         this.entities = {
-            player: this.createPlayer(),
+            player: player,
+            camera: camera,
         };
 
         this.turnTheLightOn();
@@ -32,6 +42,7 @@ export default class World {
 
     public update(deltaTimeInSeconds: number): void {
         this.entities.player.update(deltaTimeInSeconds);
+        this.entities.camera.update();
         this.createAdjacentRooms();
         this.updateLight();
     }
@@ -74,8 +85,8 @@ export default class World {
         return (
             indexPosition.x < 0 ||
             indexPosition.y < 0 ||
-            indexPosition.x >= World.roomMaxIndexPosition ||
-            indexPosition.y >= World.roomMaxIndexPosition
+            indexPosition.x > World.roomMaxIndexPosition.x-1 ||
+            indexPosition.y > World.roomMaxIndexPosition.y-1
         );
     }
 
@@ -95,6 +106,14 @@ export default class World {
                 inputManager: new PlayerCharacterInputManager(),
             },
         );
+    }
+
+    private createCamera(mainCharacter: MainCharacter): Camera {
+        return new Camera({
+            world: this,
+            position: mainCharacter.position,
+            velocity: mainCharacter.velocity,
+        })
     }
 
     private updateLight(): void {
