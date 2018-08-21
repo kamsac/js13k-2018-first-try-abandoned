@@ -1,17 +1,17 @@
-import MainCharacter from '../MainCharacter';
+import MainCharacter from '../../MainCharacter';
+import SpriteBase from './SpriteBase';
 
-export default class PlayerRenderer {
-    private canvas: HTMLCanvasElement;
-    private context: CanvasRenderingContext2D;
-
+export default class PlayerSprite extends SpriteBase {
     constructor() {
-        this.canvas = document.createElement('canvas');
-        this.context = this.canvas.getContext('2d')!;
-        this.canvas.height = MainCharacter.sizeRadius * 2;
-        this.canvas.width = MainCharacter.sizeRadius * 2;
+        super({
+            width: MainCharacter.sizeRadius * 2,
+            height: MainCharacter.sizeRadius * 2,
+        });
+
+        this.createSprite();
     }
 
-    public getSprite(): HTMLCanvasElement {
+    protected createSprite(): HTMLCanvasElement {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.context.beginPath();

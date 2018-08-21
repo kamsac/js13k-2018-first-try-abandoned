@@ -5,7 +5,7 @@ import WorldEntitiesStructure from './interfaces/WorldEntitiesStructure';
 import Point from './helpers/Point';
 import Room from './Room';
 
-const lightTurnOffDelay = 2000;
+const lightTurnOffDelay = 999999; // temporary 99999
 
 export default class World {
     public size: Size;
@@ -31,7 +31,6 @@ export default class World {
     }
 
     public update(deltaTimeInSeconds: number): void {
-        console.log('is light on', this.isLightOn);
         this.entities.player.update(deltaTimeInSeconds);
         this.createAdjacentRooms();
         this.updateLight();

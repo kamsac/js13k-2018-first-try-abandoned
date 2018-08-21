@@ -1,11 +1,13 @@
 import Size from './interfaces/Size';
 import World from './World';
 import WorldEntity from './WorldEntity';
-import PlayerRenderer from './render/PlayerRenderer';
+import PlayerSprite from './render/sprites/PlayerSprite';
 import MainCharacter from './MainCharacter';
 import WallRenderer from './render/WallRenderer';
 import Room from './Room';
 import LightRenderer from './render/LightRenderer';
+import FloorSprite from './render/sprites/FloorSprite';
+import drawImage from "./helpers/drawImage";
 
 const canvasSize: Size = {
     width: 800,
@@ -15,21 +17,25 @@ const canvasSize: Size = {
 export default class Renderer {
     public canvas!: HTMLCanvasElement;
     private context!: CanvasRenderingContext2D;
-    private playerRenderer: PlayerRenderer = new PlayerRenderer();
+    private playerSprite: PlayerSprite;
     private lightRenderer: LightRenderer;
+    private floorSprite: FloorSprite;
 
     public constructor() {
         this.createCanvas();
         this.setResolution(canvasSize);
         this.attachCanvas();
 
+        this.playerSprite = new PlayerSprite();
         this.lightRenderer = new LightRenderer(canvasSize);
+        this.floorSprite = new FloorSprite(canvasSize);
     }
 
     public render(world: World): void {
         this.resetTransform();
         this.clearCanvas();
 
+        this.renderFloor();
         this.renderPlayer(world.entities.player);
         this.renderWalls(world.rooms);
         this.renderLight(world.isLightOn);
@@ -37,6 +43,10 @@ export default class Renderer {
 
     private resetTransform(): void {
         this.context.setTransform(1,0,0,1,0,0);
+    }
+
+    private renderFloor(): void {
+        this.context.drawImage(this.floorSprite.getSprite(), 0, 0);
     }
 
     private renderWalls(rooms: Room[]): void {
@@ -49,22 +59,16 @@ export default class Renderer {
     }
 
     private renderPlayer(player: MainCharacter): void {
-        this.renderWorldEntity(player, this.playerRenderer.getSprite());
-    }
-
-    private drawImage(image: HTMLCanvasElement, x: number, y: number, scale: number, rotation: number): void {
-        this.context.setTransform(scale, 0, 0, scale, x, y); // sets scale and origin
-        this.context.rotate(rotation);
-        this.context.drawImage(image, -image.width / 2, -image.height / 2);
+        this.renderWorldEntity(player, this.playerSprite.getSprite());
     }
 
     private renderWorldEntity(worldEntity: WorldEntity, sprite: HTMLCanvasElement) {
-        this.drawImage(sprite, worldEntity.position.x, worldEntity.position.y, 1, worldEntity.rotation.angle());
+        drawImage(this.context, sprite, worldEntity.position.x, worldEntity.position.y, 1, worldEntity.rotation.angle());
     }
 
     private renderLight(isLightOn: boolean): void {
         this.context.drawImage(
-            this.lightRenderer.getSprite(isLightOn),
+            this.lightRenderer.render(isLightOn),
             0, 0,
             this.canvas.width, this.canvas.height,
         );
