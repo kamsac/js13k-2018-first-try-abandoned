@@ -12,11 +12,11 @@ export default class LightSprite extends SpriteBase {
     protected createSprite(options: LightSpriteOptions): HTMLCanvasElement {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         if (options.isLightOn) {
-            this.context.globalAlpha = 0.01;
-            this.context.fillStyle = '#cdd';
+            this.context.globalAlpha = 0.03;
+            this.context.fillStyle = '#cdb';
         } else {
             this.context.globalAlpha = 0.7;
-            this.context.fillStyle = '#223';
+            this.context.fillStyle = '#112';
         }
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
