@@ -22,6 +22,6 @@ export default class FloorTileSprite extends SpriteBase {
     }
 
     private getRandomTint(): string {
-        return `${Math.random()*1+6}%`;
+        return `${Math.random()*4+20}%`;
     }
 }
