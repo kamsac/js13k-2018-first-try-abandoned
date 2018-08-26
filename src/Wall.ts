@@ -1,5 +1,5 @@
 import LineSegment from './helpers/LineSegment';
-import Point from "./helpers/Point";
+import Point from './helpers/Point';
 
 export default class Wall {
     public readonly segments: LineSegment[];

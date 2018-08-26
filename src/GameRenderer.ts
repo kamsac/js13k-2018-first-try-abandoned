@@ -2,7 +2,7 @@ import Size from './interfaces/Size';
 import World from './World';
 import CameraRenderer from './render/CameraRenderer';
 import WorldRenderer from './render/WorldRenderer';
-import drawImage from "./helpers/drawImage";
+import drawImage from './helpers/drawImage';
 
 const canvasSize: Size = {
     width: 800,

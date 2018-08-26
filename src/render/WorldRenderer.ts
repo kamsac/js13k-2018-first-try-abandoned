@@ -7,7 +7,8 @@ import WallRenderer from './WallRenderer';
 import Room from '../Room';
 import LightRenderer from './LightRenderer';
 import FloorSprite from './sprites/FloorSprite';
-import drawImage from "../helpers/drawImage";
+import drawImage from '../helpers/drawImage';
+import FogOfWarRenderer from './FogOfWarRenderer';
 
 export default class WorldRenderer {
     public canvas!: HTMLCanvasElement;
@@ -15,13 +16,16 @@ export default class WorldRenderer {
     private playerSprite: PlayerSprite;
     private lightRenderer: LightRenderer;
     private floorSprite: FloorSprite;
+    private fogOfWarRenderer: FogOfWarRenderer;
 
     public constructor(canvasSize: Size) {
         this.createCanvas(canvasSize);
 
         this.playerSprite = new PlayerSprite();
         this.lightRenderer = new LightRenderer(canvasSize);
+        this.fogOfWarRenderer = new FogOfWarRenderer(canvasSize);
         this.floorSprite = new FloorSprite(canvasSize);
+
     }
 
     public render(world: World): HTMLCanvasElement {
@@ -32,6 +36,7 @@ export default class WorldRenderer {
         this.renderPlayer(world.entities.player);
         this.renderWalls(world.rooms);
         this.renderLight(world.isLightOn);
+        this.renderFogOfWar(world);
 
         return this.canvas;
     }
@@ -67,6 +72,16 @@ export default class WorldRenderer {
             0, 0,
             this.canvas.width, this.canvas.height,
         );
+    }
+
+    private renderFogOfWar(world: World): void {
+        this.context.globalCompositeOperation = 'destination-in';
+        this.context.drawImage(
+            this.fogOfWarRenderer.render(world),
+            0, 0,
+            this.canvas.width, this.canvas.height,
+        );
+        this.context.globalCompositeOperation = 'source-over';
     }
 
     private clearCanvas(): void {
