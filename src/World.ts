@@ -5,6 +5,7 @@ import WorldEntitiesStructure from './interfaces/WorldEntitiesStructure';
 import Point from './helpers/Point';
 import Room from './Room';
 import Camera from './Camera';
+import FogOfWar from './FogOfWar';
 
 const lightTurnOffDelay = 999999; // temporary 99999
 
@@ -21,6 +22,8 @@ export default class World {
     );
     public isLightOn!: boolean;
     public lastLightTurnOn!: number;
+    public fogOfWar: FogOfWar;
+    public tick: number = 0;
 
     public constructor() {
         this.rooms = [];
@@ -37,14 +40,20 @@ export default class World {
             camera: camera,
         };
 
+        this.fogOfWar = new FogOfWar();
+
         this.turnTheLightOn();
     }
 
     public update(deltaTimeInSeconds: number): void {
+        this.tick++;
         this.entities.player.update(deltaTimeInSeconds);
         this.entities.camera.update();
         this.createAdjacentRooms();
         this.updateLight();
+        if (this.tick % 2 === 0) {
+            this.fogOfWar.update(this);
+        }
     }
 
     public applyRoom(room: Room): void {

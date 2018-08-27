@@ -77,7 +77,7 @@ export default class WorldRenderer {
     private renderFogOfWar(world: World): void {
         this.context.globalCompositeOperation = 'destination-in';
         this.context.drawImage(
-            this.fogOfWarRenderer.render(world),
+            this.fogOfWarRenderer.render(world.fogOfWar.polygon),
             0, 0,
             this.canvas.width, this.canvas.height,
         );
