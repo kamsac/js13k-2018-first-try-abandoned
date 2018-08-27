@@ -7,7 +7,6 @@ import RoomExits from './interfaces/RoomExits';
 import shuffle from "./helpers/shuffle";
 
 const doorWidth: number = 50;
-const wallWidth: number = 5;
 
 export default class Room {
     public readonly world: World;
@@ -15,6 +14,7 @@ export default class Room {
         width: 200,
         height: 150,
     };
+    public static wallWidth = 5;
     public walls: Wall[];
     public readonly indexPosition: Point;
     public readonly exits: RoomExits;
@@ -88,10 +88,10 @@ export default class Room {
         const bottomLeft: Point = new Point(0+this.topLeftOffsetRoomPosition.x, Room.size.height+this.topLeftOffsetRoomPosition.y);
 
         return [
-            ...this.getOneEdgeWalls(new LineSegment(topLeft, topRight), wallWidth, this.exits.top),
-            ...this.getOneEdgeWalls(new LineSegment(topRight, bottomRight), wallWidth, this.exits.right),
-            ...this.getOneEdgeWalls(new LineSegment(bottomRight, bottomLeft), wallWidth, this.exits.bottom),
-            ...this.getOneEdgeWalls(new LineSegment(bottomLeft, topLeft), wallWidth, this.exits.left),
+            ...this.getOneEdgeWalls(new LineSegment(topLeft, topRight), Room.wallWidth, this.exits.top),
+            ...this.getOneEdgeWalls(new LineSegment(topRight, bottomRight), Room.wallWidth, this.exits.right),
+            ...this.getOneEdgeWalls(new LineSegment(bottomRight, bottomLeft), Room.wallWidth, this.exits.bottom),
+            ...this.getOneEdgeWalls(new LineSegment(bottomLeft, topLeft), Room.wallWidth, this.exits.left),
         ];
     }
 

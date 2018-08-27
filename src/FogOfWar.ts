@@ -2,6 +2,7 @@ import Point from './helpers/Point';
 import World from './World';
 import LineSegment from './helpers/LineSegment';
 import MainCharacter from './MainCharacter';
+import Room from './Room';
 
 export default class FogOfWar {
     public polygon: Point[];
@@ -32,12 +33,12 @@ export default class FogOfWar {
             new LineSegment(bottomLeft, topLeft),
         ];
 
-        this.polygon = getSightPolygon(segments.concat(worldEdgeSegments), world.entities.player);
+        this.polygon = getSightPolygon(segments.concat(worldEdgeSegments), world.entities.player, Room.wallWidth);
     }
 
 }
 
-function getIntersection(ray: LineSegment, segment: LineSegment): Intersect | null {
+function getIntersection(ray: LineSegment, segment: LineSegment, wallSeenDepth: number): Intersect | null {
     const rayPointX: number = ray.a.x;
     const rayPointY: number = ray.a.y;
     const rayDirectionX: number = ray.b.x - ray.a.x;
@@ -67,13 +68,16 @@ function getIntersection(ray: LineSegment, segment: LineSegment): Intersect | nu
     if (T2 < 0 || T2 > 1) return null;
 
     return {
-        point: new Point(rayPointX + rayDirectionX * T1, rayPointY + rayDirectionY * T1),
+        point: new Point(
+            rayPointX + rayDirectionX * (T1 + wallSeenDepth),
+            rayPointY + rayDirectionY * (T1 + wallSeenDepth),
+        ),
         param: T1,
         angle: 0,
     };
 }
 
-function getSightPolygon(segments: LineSegment[], player: MainCharacter): Point[] {
+function getSightPolygon(segments: LineSegment[], player: MainCharacter, wallSeenDepth: number): Point[] {
     const sightPoint: Point = player.position.addVector(player.rotation.multiply(MainCharacter.sizeRadius / 4));
 
     const points: Point[] = segments.reduce<Point[]>((acc, segment) => {
@@ -99,13 +103,13 @@ function getSightPolygon(segments: LineSegment[], player: MainCharacter): Point[
     for (let j = 0; j < uniquePoints.length; j++) {
         const uniquePointWithAngle: PointWithAngle = {
             point: uniquePoints[j],
-            angle: Math.atan2(uniquePoints[j].y - sightPoint.y, uniquePoints[j].x - sightPoint.x)
+            angle: Math.atan2(uniquePoints[j].y - sightPoint.y, uniquePoints[j].x - sightPoint.x),
         };
         uniquePointsWithAngles.push(uniquePointWithAngle);
         uniqueAngles.push(
             uniquePointWithAngle.angle - 0.00001,
             uniquePointWithAngle.angle,
-            uniquePointWithAngle.angle + 0.00001
+            uniquePointWithAngle.angle + 0.00001,
         );
     }
 
@@ -123,7 +127,7 @@ function getSightPolygon(segments: LineSegment[], player: MainCharacter): Point[
 
         let closestIntersect: Intersect | null = null;
         for (let i = 0; i < segments.length; i++) {
-            const intersect: Intersect | null = getIntersection(ray, segments[i]);
+            const intersect: Intersect | null = getIntersection(ray, segments[i], wallSeenDepth);
             if (!intersect) continue;
             if (!closestIntersect || intersect.param < closestIntersect.param) {
                 closestIntersect = intersect;
